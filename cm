@@ -1,0 +1,170 @@
+Great! You've got a comprehensive cloud computing assignment covering organization setup, role-based access, cost analysis, billing alerts, and comparisons across AWS, Azure, and GCP. Since you mentioned you're working with AWS Free Tier and an Azure Student subscription with ₹3750 (~$50) in credits, let’s focus on detailed, practical steps for both AWS and Azure, suitable for screenshots and write-ups.
+✅ 1. Create a Cloud Organization + Role-Based Access Control (RBAC)
+(a) AWS – Organization & RBAC
+
+    ❗ Make sure you have access to AWS Organizations, which is outside the free-tier. If not, do user creation and IAM roles instead.
+
+Steps (Organization Creation)
+
+    Login to AWS Console: https://console.aws.amazon.com/
+
+    Go to AWS Organizations.
+
+    Click Create Organization → Choose Consolidated Billing or All Features.
+
+    Add accounts: Create a new AWS account under this organization or invite an existing one.
+
+    Set OU (Organizational Units) if needed for structure.
+
+Steps (RBAC – IAM Roles & Policies)
+
+    Go to IAM → Users → Add user.
+
+    Choose programmatic access or console access.
+
+    Attach policies like AmazonEC2ReadOnlyAccess, AdministratorAccess, or custom.
+
+    Create IAM Groups (e.g., Dev, Finance, Admin).
+
+    Assign roles using IAM Roles → Create Role → Select AWS service → Choose policy.
+
+📸 Screenshots to include:
+
+    AWS Organization dashboard.
+
+    IAM User creation flow.
+
+    IAM Roles with attached policy.
+
+(b) Azure – Organization & RBAC
+
+    Azure already has a hierarchical structure under a Tenant > Subscription > Resource Groups > Resources.
+
+Steps (Organization Creation)
+
+    Go to Azure Portal: https://portal.azure.com
+
+    Navigate to Azure Active Directory (AAD).
+
+    Use the Default Directory or create a new tenant (organization).
+
+    Add users: AAD → Users → New User.
+
+    Assign roles to users under Subscriptions or Resource Groups.
+
+Steps (RBAC)
+
+    Go to Subscription → Access Control (IAM).
+
+    Click Add Role Assignment.
+
+    Choose roles: Reader, Contributor, Owner, or custom roles.
+
+    Assign to user, group, or service principal.
+
+📸 Screenshots to include:
+
+    Azure AD user creation.
+
+    IAM Role Assignment in subscription.
+
+✅ 2. Cost Model for Web App + Cost-Benefit Analysis
+
+Imagine a simple web app stack:
+
+    Frontend: Static Website (S3 / Azure Blob / GCP Bucket)
+
+    Backend: EC2 / Azure VM / GCP Compute Engine
+
+    Database: RDS / Azure SQL / GCP SQL
+
+    Other services: DNS, Load Balancer, Monitoring
+
+Create a table like this:
+Service	AWS (Monthly)	Azure (Monthly)	GCP (Monthly)
+VM Instance	₹600	₹700	₹550
+Storage	₹100	₹120	₹90
+Database	₹500	₹600	₹480
+DNS + Load Bal.	₹200	₹180	₹160
+Monitoring	₹50	₹60	₹45
+Total	₹1450	₹1660	₹1325
+Analysis:
+
+    GCP is cheaper but may lack deeper enterprise support.
+
+    Azure has great integration with enterprise and Windows stack.
+
+    AWS is mature and offers robust documentation/support.
+
+✅ 3. Create Alerts for Cloud Resource Usage
+AWS – Usage Alerts
+
+    Go to CloudWatch → Alarms.
+
+    Create Alarm → Select metric (e.g., CPU usage of EC2).
+
+    Set threshold (e.g., CPU > 70%).
+
+    Configure actions (email via SNS).
+
+Azure – Usage Alerts
+
+    Go to Monitor → Alerts → New Alert Rule.
+
+    Choose Resource (VM/Storage).
+
+    Set Condition (e.g., % CPU > 70).
+
+    Action Group → Add email alert.
+
+    Name & create the rule.
+
+📸 Screenshots: Alert setup flow, condition setting.
+✅ 4. Billing Alerts
+(a) AWS
+
+    Go to Billing Console → Budgets.
+
+    Create Budget → Type: Cost Budget.
+
+    Set limit (e.g., ₹1000).
+
+    Add notification → Email when 80% used.
+
+(b) Azure
+
+    Go to Cost Management + Billing → Budgets.
+
+    Click Add → Set budget amount.
+
+    Choose Alert condition: 50%, 80%, etc.
+
+    Link to Action Group → Email alert.
+
+🖼️ Screenshot: Budget template screen with thresholds and action group selection.
+✅ 5. Compare Cloud Cost (Same Web App)
+
+Summarize like:
+Criteria	AWS	Azure	GCP
+Cost Efficiency	Medium	High	Highest
+Free-tier Duration	12 months	$100 for 1 yr	$300 for 3 mo
+Services Variety	Extensive	Wide	Moderate
+UI/UX & Ease	Moderate	User-friendly	Simple
+Ideal For	Enterprises	Students/Windows	Startups
+
+Winner (for students or lightweight app): GCP, followed by Azure, then AWS
+✅ 6. BONUS: C Programming Environment Setup
+Windows:
+
+    Install Code::Blocks or Dev C++.
+
+    Or use VS Code + MinGW Compiler.
+
+    Create Hello World .c file → Compile & Run.
+
+Linux (Ubuntu):
+
+sudo apt update
+sudo apt install gcc build-essential
+gcc hello.c -o hello
+./hello
