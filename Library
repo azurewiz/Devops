@@ -1,0 +1,58 @@
+Entity
+@Entity
+public class Book {
+    @Id @GeneratedValue
+    private Long id;
+    private String title;
+    private String author;
+}
+
+Repo:
+public interface BookRepository extends JpaRepository<Book, Long> {}
+
+Controller:
+@RestController
+@RequestMapping("/books")
+public class BookController {
+    @Autowired
+    private BookRepository repo;
+
+    @PostMapping
+    public Book add(@RequestBody Book b) {
+        return repo.save(b);
+    }
+
+    @GetMapping
+    public List<Book> all() {
+        return repo.findAll();
+    }
+}
+
+Test
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.List;
+@SpringBootTest
+class BookTests {
+
+    @Autowired
+    BookRepository repo;
+
+    @Test
+    void testAddBook() {
+        Book b = new Book();
+        b.setTitle("Java");
+        b.setAuthor("James");
+        Book saved = repo.save(b);
+        assertNotNull(saved.getId());
+    }
+
+    @Test
+    void testFetchAllBooks() {
+        List<Book> list = repo.findAll();
+        assertNotNull(list);
+    }
+}
+
