@@ -1,0 +1,198 @@
+src/
+ └── main/
+      ├── java/com/example/demo/
+      │     ├── Student.java       --> Entity
+      │     ├── StudentRepository.java  --> JpaRepository
+      │     ├── StudentController.java  --> @RestController
+      │     └── DemoApplication.java    --> Main Class
+      └── resources/
+            ├── application.properties
+pom.xml
+
+
+pom.xml
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example</groupId>
+    <artifactId>student-management-system</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>student-management-system</name>
+    <description>Student Management System for DevOps practical</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.0</version>
+    </parent>
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+</dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+application.properties
+# H2 Database Config
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+# JDBC Configuration
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# JPA
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=update
+
+
+
+Student.java
+@Entity
+public class Student {
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+    private String email;
+}
+
+
+StudentRepository.java
+package com.example.studentmanagementsystem.repository;
+
+import com.example.studentmanagementsystem.model.Student;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StudentRepository extends JpaRepository<Student, Long> {}
+
+
+StudentService.java
+package com.example.studentmanagementsystem.service;
+
+import com.example.studentmanagementsystem.model.Student;
+import com.example.studentmanagementsystem.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class StudentService {
+    @Autowired
+    private StudentRepository studentRepository;
+
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
+
+    public Student saveStudent(Student student) {
+        return studentRepository.save(student);
+    }
+}
+
+StudentController.java
+package com.example.studentmanagementsystem.controller;
+
+import com.example.studentmanagementsystem.model.Student;
+import com.example.studentmanagementsystem.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/students")
+public class StudentController {
+    @Autowired
+    private StudentService studentService;
+
+    @GetMapping
+    public List<Student> getAllStudents() {
+        return studentService.getAllStudents();
+    }
+
+    @PostMapping
+    public Student addStudent(@RequestBody Student student) {
+        return studentService.saveStudent(student);
+    }
+}
+
+
+@RestController
+@RequestMapping("/students")
+public class StudentController {
+    @Autowired
+    private StudentRepository repository;
+
+    @GetMapping
+    public List<Student> getAll() {
+        return repository.findAll();
+    }
+
+    @PostMapping
+    public Student add(@RequestBody Student student) {
+        return repository.save(student);
+    }
+}
+
+
+src/test/java
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.List;
+
+
+@SpringBootTest
+class StudentTests {
+
+    @Autowired
+    private StudentRepository repository;
+
+    @Test
+    void testSaveStudent() {
+        Student s = new Student();
+        s.setName("Test Name");
+        s.setEmail("test@example.com");
+        Student saved = repository.save(s);
+        assertNotNull(saved.getId());
+    }
+
+    @Test
+    void testFindAll() {
+        List<Student> students = repository.findAll();
+        assertNotNull(students);
+    }
+}
+
+
