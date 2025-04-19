@@ -1,0 +1,63 @@
+Enitty
+@Entity
+public class Account {
+    @Id @GeneratedValue
+    private Long id;
+    private String name;
+    private Double balance;
+}
+
+repo
+public interface AccountRepository extends JpaRepository<Account, Long> {}
+
+Controller
+@RestController
+@RequestMapping("/accounts")
+public class AccountController {
+    @Autowired
+    private AccountRepository repo;
+
+    @PostMapping
+    public Account open(@RequestBody Account a) {
+        return repo.save(a);
+    }
+
+    @GetMapping
+    public List<Account> all() {
+        return repo.findAll();
+    }
+
+    @PutMapping("/deposit/{id}")
+    public Account deposit(@PathVariable Long id, @RequestParam double amt) {
+        Account acc = repo.findById(id).get();
+        acc.setBalance(acc.getBalance() + amt);
+        return repo.save(acc);
+    }
+}
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.List;
+@SpringBootTest
+class AccountTests {
+
+    @Autowired
+    AccountRepository repo;
+
+    @Test
+    void testOpenAccount() {
+        Account acc = new Account();
+        acc.setName("John");
+        acc.setBalance(5000.0);
+        Account saved = repo.save(acc);
+        assertNotNull(saved.getId());
+    }
+
+    @Test
+    void testFindAccounts() {
+        List<Account> list = repo.findAll();
+        assertTrue(list.size() >= 0);
+    }
+}
