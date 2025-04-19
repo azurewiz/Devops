@@ -1,0 +1,54 @@
+
+Entity
+@Entity
+public class Product {
+    @Id @GeneratedValue
+    private Long id;
+    private String name;
+    private Double price;
+}
+
+Repo
+public interface ProductRepository extends JpaRepository<Product, Long> {}
+
+Controller
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+    @Autowired
+    private ProductRepository repo;
+
+    @PostMapping
+    public Product add(@RequestBody Product p) {
+        return repo.save(p);
+    }
+
+    @GetMapping
+    public List<Product> all() {
+        return repo.findAll();
+    }
+}
+
+
+
+ProductTests.java
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.List;
+@SpringBootTest
+class ProductTests {
+
+    @Autowired
+    ProductRepository repo;
+
+    @Test
+    void testAddProduct() {
+        Product p = new Product();
+        p.setName("Shoes");
+        p.setPrice(1500.0);
+        Product saved = repo.save(p);
+        assertNotNull(saved.getId());
+    }
+}
