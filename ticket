@@ -1,0 +1,50 @@
+@Entity
+public class Ticket {
+    @Id @GeneratedValue
+    private Long id;
+    private String name;
+    private String destination;
+    private String date;
+}
+
+public interface TicketRepository extends JpaRepository<Ticket, Long> {}
+
+@RestController
+@RequestMapping("/tickets")
+public class TicketController {
+    @Autowired
+    private TicketRepository repo;
+
+    @PostMapping
+    public Ticket book(@RequestBody Ticket t) {
+        return repo.save(t);
+    }
+
+    @GetMapping
+    public List<Ticket> all() {
+        return repo.findAll();
+    }
+}
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.List;
+
+@SpringBootTest
+class TicketTests {
+
+    @Autowired
+    TicketRepository repo;
+
+    @Test
+    void testBookTicket() {
+        Ticket t = new Ticket();
+        t.setName("Alice");
+        t.setDestination("Delhi");
+        t.setDate("2025-04-20");
+        Ticket saved = repo.save(t);
+        assertNotNull(saved.getId());
+    }
+}
