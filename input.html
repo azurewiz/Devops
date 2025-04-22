@@ -10,44 +10,43 @@
             var password = document.getElementById("password").value;
             
             var usernameRegex = /^[A-Za-z]{1,20}$/; // Only letters, max 20 chars
-            var passwordRegex = /^[A-Za-z0-9]{1,15}$/; // Alphanumeric, max 15 chars
+            var passwordRegex = /^(?=.*[A-Za-z0-9])(?=.*\d)[A-Za-z0-9\d]{1,15}$/; // Alphanumeric, max 15 chars
             
             if (!usernameRegex.test(username)) {
                 alert("invalid username");
-                return false;
             }
-            if (!passwordRegex.test(password)) {
+            else if (!passwordRegex.test(password)) {
                 alert("invalid password. password must contains numbers and special characters and letters");
-                return false;
             }
-            if (username.length < 1 || username.length > 20) {
+            else if (username.length < 1 || username.length > 20) {
                 alert("Username must be between 1 and 20 characters long.");
                 return false;
             }
-            if (password.length < 1 || password.length > 15) {
+            else if (password.length < 1 || password.length > 15) {
                 alert("Password must be between 1 and 15 characters long.");
                 return false;
             }
-            if (password.length < 8) {
+            else if (password.length < 8) {
                 alert("Password must be at least 8 characters long.");
                 return false;
             }
-            if (password.length > 15) {
+            else if (password.length > 15) {
                 alert("Password must be at most 15 characters long.");
                 return false;
             }
-            if (username.length < 1) {
+            else if (username.length < 1) {
                 alert("Username cannot be empty.");
                 return false;
             }
-            if (password.length < 1) {
+            else if (password.length < 1) {
                 alert("Password cannot be empty.");
                 return false;
             }
 
-            
+            else{
             alert("Login Successful");
             return true;
+            }
         }
     </script>
 </head>
