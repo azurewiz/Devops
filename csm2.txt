@@ -1,0 +1,152 @@
+1. Create a Cloud Organization with Role-Based Access Control (RBAC)
+(a) AWS: Using AWS Organizations and IAM
+
+AWS Organizations enables you to create a multi-account structure for centralized management, with IAM for RBAC. The goal is to set up an organization, create accounts, and define roles with specific permissions.
+Step-by-Step Procedure
+
+    Sign in to AWS Management Console
+        Access https://console.aws.amazon.com/ as the root user or an IAM user with administrative privileges.
+        Console Screen Description: The AWS Management Console homepage displays a search bar, a list of recently visited services, and a navigation menu. Search for “AWS Organizations” or select it under “Management & Governance.”
+    Create an AWS Organization
+        Navigate to AWS Organizations > click Create an organization.
+        Choose Enable all features for full functionality (e.g., consolidated billing, service control policies).
+        Console Screen Description: The “Create organization” screen shows two options: “Enable all features” (recommended) or “Consolidated billing only.” A confirmation prompt appears after creation, displaying the organization’s root ID (e.g., o-xxxxxxxxxx).
+        Your root account becomes the management account.
+    Create Organizational Units (OUs)
+        In AWS Organizations, go to Organize accounts > Root > click Create an organizational unit.
+        Name the OU (e.g., “Development” or “Production”).
+        Repeat to create additional OUs as needed (e.g., “Test”, “Prod”).
+        Console Screen Description: The “Organize accounts” tab shows a hierarchical tree with the “Root” node. Clicking “Create an organizational unit” opens a form to input the OU name and parent (default is Root).
+    Create Member Accounts
+        In AWS Organizations, go to Accounts > click Create an account.
+        Enter an account name (e.g., “DevAccount”) and email (unique, e.g., dev+account@yourdomain.com).
+        Assign the account to an OU (e.g., “Development”).
+        Console Screen Description: The “Create an account” form includes fields for account name, email, and OU selection. After creation, the account appears under the selected OU in the “Accounts” tab.
+    Set Up RBAC with IAM Roles
+        Navigate to the IAM service in the management account.
+        Create a role for cross-account access:
+            Go to Roles > Create role > select AWS account as the trusted entity.
+            Enter the member account ID (12-digit number from the member account’s “My Account” page).
+            Attach policies (e.g., AmazonS3ReadOnlyAccess for read-only S3 access).
+            Name the role (e.g., “DevS3ReadRole”) and create it.
+        In the member account, create an IAM user or group:
+            Go to Users > Add users, create a user (e.g., “DevUser”).
+            Assign permissions to assume the role by attaching an inline policy (see artifact below).
+        Console Screen Description: The IAM “Create role” wizard includes steps for selecting a trusted entity, adding permissions, and naming the role. The “Add users” form includes username, access type (console or programmatic), and permissions assignment options.
+    Apply Service Control Policies (SCPs)
+        In AWS Organizations, go to Policies > Service control policies > click Create policy.
+        Define a policy to restrict actions (e.g., deny EC2 instance launches in certain regions).
+        Attach the SCP to an OU or account.
+        Console Screen Description: The “Create policy” screen provides a JSON editor for SCP definitions and fields for policy name and description. The “Policies” tab lists all SCPs with options to attach them to OUs or accounts.
+
+Artifact: IAM Role Trust Policy and AssumeRole Policy
+
+{
+  "TrustPolicy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "arn:aws:iam::MEMBER_ACCOUNT_ID:root"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  },
+  "AssumeRolePolicy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": "sts:AssumeRole",
+        "Resource": "arn:aws:iam::MANAGEMENT_ACCOUNT_ID:role/DevS3ReadRole"
+      }
+    ]
+  }
+}
+
+(b) Azure: Using Management Groups and Azure RBAC
+
+Azure uses Management Groups for organizational hierarchy and Azure Role-Based Access Control (RBAC) for permissions management.
+Step-by-Step Procedure
+
+    Sign in to Azure Portal
+        Access https://portal.azure.com/ with an account that has Global Administrator privileges.
+        Portal Screen Description: The Azure Portal dashboard displays a search bar, favorite services, and a resource group list. Search for “Management groups” or select it under “All services.”
+    Create a Management Group
+        Navigate to Management groups > click Start using management groups (if not already enabled).
+        Click Create > enter a Management Group ID (e.g., “OrgRoot”) and display name (e.g., “Organization Root”).
+        Portal Screen Description: The “Management groups” page shows an “Add management group” button. The creation form includes fields for ID and display name, with a hierarchy view showing the tenant root group.
+    Create Child Management Groups
+        In Management groups, select the root group > click New management group.
+        Create groups like “Development” or “Production” with unique IDs (e.g., “DevMG”, “ProdMG”).
+        Portal Screen Description: The “New management group” form is similar to the root group creation, with an option to select the parent group (e.g., “OrgRoot”).
+    Add Subscriptions
+        Go to Subscriptions, note the IDs of existing subscriptions, or create a new one.
+        In Management groups, select an OU (e.g., “Development”) > click Add subscription > select a subscription ID.
+        Portal Screen Description: The “Add subscription” option in a management group’s details page lists available subscriptions with checkboxes for selection.
+    Set Up RBAC
+        Navigate to Management groups > select a group (e.g., “Development”) > click Access control (IAM).
+        Click Add role assignment > select a role (e.g., “Contributor” for full resource management).
+        Assign the role to a user, group, or service principal (e.g., a user named “DevUser”).
+        For granular permissions, create a custom role:
+            Go to Subscriptions > Access control (IAM) > Add > Add custom role.
+            Define permissions in JSON (see artifact below).
+        Portal Screen Description: The “Add role assignment” screen includes tabs for role selection, member selection (users/groups), and conditions. The “Add custom role” wizard provides a JSON editor or permission checkboxes.
+
+Artifact: Azure Custom Role Definition
+
+{
+  "Name": "DevWebAppManager",
+  "Description": "Custom role for managing web apps in Development group",
+  "Actions": [
+    "Microsoft.Web/sites/*",
+    "Microsoft.Storage/storageAccounts/read"
+  ],
+  "NotActions": [],
+  "AssignableScopes": [
+    "/subscriptions/SUBSCRIPTION_ID/managementGroups/DevMG"
+  ]
+}
+
+(c) GCP: Using Organizations and IAM
+
+GCP uses an organization resource and projects for hierarchy, with IAM for RBAC.
+Step-by-Step Procedure
+
+    Sign in to Google Cloud Console
+        Access https://console.cloud.google.com/ with an account that has Organization Administrator privileges.
+        Console Screen Description: The GCP Console dashboard shows a project selector, recent resources, and a navigation menu. Search for “IAM & Admin” or select it from the menu.
+    Set Up an Organization
+        Navigate to IAM & Admin > Manage Resources.
+        If no organization exists, link your domain to GCP via Google Workspace or Cloud Identity (requires setup outside GCP).
+        Once created, the organization appears at the top of the resource hierarchy.
+        Console Screen Description: The “Manage Resources” page displays a hierarchy with an “Organization” node (if set up) or prompts to create one. A domain verification step may appear if not linked.
+    Create Folders
+        In Manage Resources, select the organization > click Create folder.
+        Name the folder (e.g., “Development” or “Production”).
+        Repeat for additional folders.
+        Console Screen Description: The “Create folder” form includes fields for folder name and parent (organization or another folder). The hierarchy updates to show new folders.
+    Create Projects
+        In Manage Resources, select a folder > click Create project.
+        Enter a project name (e.g., “DevProject”) and assign it to a folder (e.g., “Development”).
+        Console Screen Description: The “Create project” form includes project name, organization, and folder selection fields. New projects appear under the selected folder.
+    Set Up RBAC with IAM
+        Navigate to IAM & Admin > IAM.
+        Select the organization, folder, or project level > click Add.
+        Enter a member (e.g., user email like “devuser@yourdomain.com”) and assign a role (e.g., “Compute Admin”).
+        For custom roles, go to Roles > Create role > define permissions (see artifact below).
+        Console Screen Description: The “IAM” page lists members and roles, with an “Add” button opening a form for member email, role selection, and conditions. The “Create role” page provides a permission picker or JSON edito
+
+
+        {
+  "title": "DevComputeManager",
+  "description": "Custom role for managing Compute Engine in Development",
+  "includedPermissions": [
+    "compute.instances.create",
+    "compute.instances.delete",
+    "compute.instances.get"
+  ],
+  "stage": "GA"
+}
