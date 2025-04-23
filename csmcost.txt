@@ -1,0 +1,188 @@
+(a) AWS Cost Model
+Step-by-Step Procedure
+
+    Define Application Architecture
+        Compute: EC2 t3.micro (2 vCPU, 1 GB RAM, Free Tier eligible).
+        Database: RDS MySQL t3.micro (Free Tier eligible).
+        Storage: S3 Standard for static assets (5 GB).
+        Networking: Application Load Balancer (ALB) and data transfer (100 GB/month).
+    Use AWS Pricing Calculator
+        Go to https://calculator.aws/.
+        Click Create estimate > add services:
+            EC2: Select “EC2 Instances,” choose t3.micro, 750 hours/month (Free Tier), Linux.
+            RDS: Select “RDS,” choose MySQL, t3.micro, 750 hours/month, 20 GB storage.
+            S3: Select “S3,” Standard storage, 5 GB, 1000 GET requests, 1000 PUT requests.
+            ALB: Select “Elastic Load Balancing,” Application Load Balancer, 750 hours, 10 LCUs.
+            Data Transfer: Add 100 GB outbound data transfer.
+        Save the estimate and note the monthly cost (approximately $10–$15 after Free Tier).
+        Calculator Screen Description: The AWS Pricing Calculator interface shows a service selection panel, configuration forms for each service (e.g., instance type, hours, storage), and a summary table with monthly costs. Export options include CSV or sharing links.
+    Cost-Benefit Analysis
+        Benefits:
+            Scalability: EC2 and RDS auto-scaling ensure performance under load.
+            Reliability: ALB and S3 provide high availability.
+            Free Tier: Minimizes initial costs for prototyping.
+        Costs:
+            ALB and data transfer are primary cost drivers post-Free Tier.
+            Scaling beyond Free Tier increases EC2/RDS costs.
+        Trade-offs: Use Spot Instances for EC2 to reduce costs (up to 90% savings) but risk interruptions. Reserved Instances offer 30–50% savings for predictable workloads.
+
+  {
+  "EC2": {
+    "InstanceType": "t3.micro",
+    "OperatingSystem": "Linux",
+    "HoursPerMonth": 750,
+    "Cost": "Free Tier"
+  },
+  "RDS": {
+    "Engine": "MySQL",
+    "InstanceType": "t3.micro",
+    "Storage": "20 GB",
+    "HoursPerMonth": 750,
+    "Cost": "Free Tier"
+  },
+  "S3": {
+    "StorageClass": "Standard",
+    "Storage": "5 GB",
+    "Requests": {
+      "GET": 1000,
+      "PUT": 1000
+    },
+    "Cost": 0.12
+  },
+  "ALB": {
+    "Type": "Application Load Balancer",
+    "HoursPerMonth": 750,
+    "LCUs": 10,
+    "Cost": 18.00
+  },
+  "DataTransfer": {
+    "Outbound": "100 GB",
+    "Cost": 9.00
+  },
+  "TotalMonthlyCost": 27.12
+}
+
+
+(b) Azure Cost Model
+Step-by-Step Procedure
+
+    Define Application Architecture
+        Compute: Azure App Service B1 (1 vCPU, 1.75 GB RAM, Free Tier eligible).
+        Database: Azure Database for MySQL (Basic tier, 5 GB storage).
+        Storage: Blob Storage (Hot tier, 5 GB).
+        Networking: Azure Load Balancer and 100 GB data egress.
+    Use Azure Pricing Calculator
+        Go to https://azure.microsoft.com/en-us/pricing/calculator/.
+        Add services:
+            App Service: Select “App Service,” choose B1 tier, 720 hours/month (Free Tier).
+            MySQL: Select “Azure Database for MySQL,” Basic tier, 5 GB storage.
+            Blob Storage: Select “Azure Blob Storage,” Hot tier, 5 GB, 1000 read/write operations.
+            Load Balancer: Select “Load Balancer,” Standard tier, 750 hours.
+            Data Transfer: Add 100 GB outbound data.
+        Save the estimate (approximately $15–$20 after Free Tier).
+        Calculator Screen Description: The Azure Pricing Calculator shows a service catalog, configuration panels (e.g., tier, hours, storage), and a cost summary table. Export options include Excel or sharing links.
+    Cost-Benefit Analysis
+        Benefits:
+            Integration: Seamless with Microsoft tools (e.g., Visual Studio).
+            Free Tier: App Service and MySQL reduce initial costs.
+            Managed Services: App Service simplifies deployment.
+        Costs:
+            Load Balancer and data egress drive costs post-Free Tier.
+            MySQL scaling increases costs for larger workloads.
+        Trade-offs: Use Azure Spot VMs for compute to save 60–80% but risk interruptions. Azure Reservations offer 20–40% savings for committed use.
+
+
+  {
+  "AppService": {
+    "Tier": "B1",
+    "HoursPerMonth": 720,
+    "Cost": "Free Tier"
+  },
+  "MySQL": {
+    "Tier": "Basic",
+    "Storage": "5 GB",
+    "Cost": 7.50
+  },
+  "BlobStorage": {
+    "Tier": "Hot",
+    "Storage": "5 GB",
+    "Operations": {
+      "Read": 1000,
+      "Write": 1000
+    },
+    "Cost": 0.10
+  },
+  "LoadBalancer": {
+    "Tier": "Standard",
+    "HoursPerMonth": 750,
+    "Cost": 11.00
+  },
+  "DataTransfer": {
+    "Outbound": "100 GB",
+    "Cost": 8.70
+  },
+  "TotalMonthlyCost": 27.30
+}
+
+(c) GCP Cost Model
+Step-by-Step Procedure
+
+    Define Application Architecture
+        Compute: Compute Engine e2-micro (2 vCPU, 1 GB RAM, Free Tier eligible).
+        Database: Cloud SQL MySQL (Lightweight instance, 10 GB storage).
+        Storage: Cloud Storage (Standard, 5 GB).
+        Networking: Cloud Load Balancing and 100 GB egress.
+    Use GCP Pricing Calculator
+        Go to https://cloud.google.com/products/calculator/.
+        Add services:
+            Compute Engine: Select “Compute Engine,” choose e2-micro, 730 hours/month (Free Tier).
+            Cloud SQL: Select “Cloud SQL,” MySQL, lightweight instance, 10 GB storage.
+            Cloud Storage: Select “Cloud Storage,” Standard, 5 GB, 1000 Class A/B operations.
+            Load Balancing: Select “Cloud Load Balancing,” 1 HTTP load balancer.
+            Data Transfer: Add 100 GB egress.
+        Save the estimate (approximately $12–$18 after Free Tier).
+        Calculator Screen Description: The GCP Pricing Calculator displays a service selection menu, detailed configuration forms (e.g., instance type, storage, operations), and a cost breakdown table. Export options include JSON or sharing links.
+    Cost-Benefit Analysis
+        Benefits:
+            Free Tier: e2-micro and 1 GB storage reduce costs.
+            Simplicity: Cloud SQL and Load Balancing are easy to manage.
+            Discounts: Sustained use discounts (up to 30%) apply automatically.
+        Costs:
+            Cloud SQL and egress are significant post-Free Tier.
+            Load Balancing costs increase with traffic.
+        Trade-offs: Use Preemptible VMs for compute to save 80% but risk interruptions. Committed Use Discounts offer 20–50% savings for long-term use.
+
+Artifact: GCP Pricing Calculator Configuration
+
+{
+  "ComputeEngine": {
+    "InstanceType": "e2-micro",
+    "HoursPerMonth": 730,
+    "Cost": "Free Tier"
+  },
+  "CloudSQL": {
+    "Engine": "MySQL",
+    "InstanceType": "Lightweight",
+    "Storage": "10 GB",
+    "Cost": 9.00
+  },
+  "CloudStorage": {
+    "Class": "Standard",
+    "Storage": "5 GB",
+    "Operations": {
+      "ClassA": 1000,
+      "ClassB": 1000
+    },
+    "Cost": 0.13
+  },
+  "LoadBalancing": {
+    "Type": "HTTP",
+    "Cost": 7.50
+  },
+  "DataTransfer": {
+    "Egress": "100 GB",
+    "Cost": 8.00
+  },
+  "TotalMonthlyCost": 24.63
+}
+
