@@ -1,0 +1,161 @@
+3. Create Alerts for Usage of Cloud Resources
+(a) AWS: Using CloudWatch
+Step-by-Step Procedure
+
+    Sign in to AWS Management Console
+        Navigate to CloudWatch > Alarms > Create alarm.
+        Console Screen Description: The CloudWatch dashboard shows metrics, alarms, and logs. The “Create alarm” button opens a wizard.
+    Select Metric
+        Click Select metric > choose EC2 > Per-Instance Metrics.
+        Select “CPUUtilization” for a t3.micro instance, set period to 5 minutes.
+        Console Screen Description: The metric selection screen lists namespaces (e.g., AWS/EC2) with searchable metrics and dimensions (e.g., InstanceId).
+    Define Conditions
+        Set threshold to “Greater than 80%” for 2 consecutive periods.
+        Console Screen Description: The conditions form includes threshold type (static/dynamic), operator (e.g., GreaterThanThreshold), and value fields.
+    Configure Actions
+        Add notification > select or create an SNS topic (e.g., “UsageAlerts”).
+        Enter an email address for notifications.
+        Console Screen Description: The actions panel lists options like SNS, Auto Scaling, or EC2 actions. The SNS form includes topic selection and subscriber fields.
+    Name and Create Alarm
+        Name the alarm (e.g., “EC2HighCPU”) and create it.
+        Console Screen Description: The final screen includes name, description, and review fields.
+
+(b) Azure: Using Azure Monitor
+Step-by-Step Procedure
+
+    Sign in to Azure Portal
+        Navigate to Monitor > Alerts > Create > Alert rule.
+        Portal Screen Description: The Monitor dashboard shows metrics, logs, and alerts. The “Create alert rule” button opens a configuration wizard.
+    Select Resource
+        Choose an App Service resource (e.g., B1 tier).
+        Portal Screen Description: The resource selection screen lists subscriptions, resource groups, and resource types with a search bar.
+    Define Condition
+        Click Add condition > select “CPU Percentage” > set threshold to 80% for 5 minutes.
+        Portal Screen Description: The condition form includes signal selection (e.g., CPU Percentage), threshold type, and aggregation period.
+    Configure Actions
+        Create an action group > select “Email/SMS/Push/Voice” > enter an email address.
+        Portal Screen Description: The action group form includes notification type, name, and contact details.
+    Create Alert Rule
+        Name the rule (e.g., “AppServiceHighCPU”) and save.
+        Portal Screen Description: The final form includes rule name, severity, and description fields.
+
+(c) GCP: Using Cloud Monitoring
+Step-by-Step Procedure
+
+    Sign in to Google Cloud Console
+        Navigate to Monitoring > Alerting > Create Policy.
+        Console Screen Description: The Monitoring dashboard shows metrics, uptime checks, and alerting policies. The “Create Policy” button opens a form.
+    Add Condition
+        Click Add Condition > select “Metric Threshold” > choose “VM Instance” > “CPU Usage”.
+        Set threshold to 0.8 (80%) for 5 minutes.
+        Console Screen Description: The condition form includes metric type, resource type, and threshold settings.
+    Configure Notifications
+        Add a notification channel > select “Email” > enter an email address.
+        Console Screen Description: The notification form lists channel types (e.g., Email, SMS) with configuration fields.
+    Save Policy
+        Name the policy (e.g., “ComputeHighCPU”) and save.
+        Console Screen Description: The final form includes policy name, documentation, and condition summary.
+
+4. Create Billing Alerts for Your Cloud Organization
+(a) AWS: Using AWS Budgets
+Step-by-Step Procedure
+
+    Sign in to AWS Management Console
+        Navigate to Billing and Cost Management > Budgets > Create budget.
+        Console Screen Description: The Billing dashboard shows cost trends and budgets. The “Create budget” button opens a wizard.
+    Define Budget
+        Select “Cost budget,” set amount (e.g., $10/month).
+        Choose scope (e.g., entire organization or specific account).
+        Console Screen Description: The budget form includes budget type (cost, usage, savings), amount, and scope filters (e.g., account, service).
+    Set Alerts
+        Add alert threshold (e.g., 80% of budget, $8).
+        Select or create an SNS topic (e.g., “BillingAlerts”) > add email subscriber.
+        Console Screen Description: The alert form includes threshold percentage, notification type, and SNS topic selection.
+    Create Budget
+        Name the budget (e.g., “MonthlyCost”) and create.
+        Console Screen Description: The final screen includes budget name, period, and summary.
+
+(b) Azure: Using Cost Management
+Step-by-Step Procedure
+
+    Sign in to Azure Portal
+        Navigate to Cost Management + Billing > Cost Management > Budgets > Add.
+        Portal Screen Description: The Cost Management dashboard shows cost analysis and budgets. The “Add” button opens a budget creation form.
+    Define Budget
+        Set budget amount (e.g., $10/month), scope (e.g., subscription or management group).
+        Choose evaluation period (monthly).
+        Portal Screen Description: The budget form includes name, amount, scope (dropdown for subscriptions/management groups), and period (monthly, quarterly).
+    Set Alerts
+        Add alert condition (e.g., 80% of budget, $8) > select action group (e.g., email notification).
+        Portal Screen Description: The alert form includes percentage threshold, action group selection, and notification settings.
+    Create Budget
+        Name the budget (e.g., “MonthlyCost”) and save.
+        Portal Screen Description: The final form summarizes budget details with save/cancel buttons.
+
+Template Description (Screenshot Substitute)
+
+    Budget Creation Form: A multi-step form with tabs for “Basics” (name, scope, period, amount) and “Alerts” (threshold, action group). The scope dropdown lists subscriptions and management groups. The alert section includes a table for adding multiple thresholds (e.g., 50%, 80%, 100%).
+
+(c) GCP: Using Billing Budgets
+Step-by-Step Procedure
+
+    Sign in to Google Cloud Console
+        Navigate to Billing > Budgets & Alerts > Create Budget.
+        Console Screen Description: The Billing dashboard shows cost trends and budgets. The “Create Budget” button opens a form.
+    Define Budget
+        Set budget amount (e.g., $10/month), scope (e.g., all projects or specific project).
+        Choose budget type (cost or usage).
+        Console Screen Description: The budget form includes fields for name, scope (checkboxes for projects), amount, and type (cost/usage).
+    Set Alerts
+        Add alert thresholds (e.g., 80% of budget, $8) > select notification channel (e.g., email).
+        Console Screen Description: The alert section includes a table for percentage thresholds and notification channel dropdowns.
+    Save Budget
+        Name the budget (e.g., “MonthlyCost”) and save.
+        Console Screen Description: The final form summarizes budget details with a save button.
+
+Template Description (Screenshot Substitute)
+
+    Budget Creation Form: A single-page form with sections for budget details (name, scope, amount) and alerts (threshold percentages, notification channels). The scope section lists projects with checkboxes. The alert table allows adding multiple thresholds with email or Pub/Sub options.
+
+5. Compare Cloud Costs for a Simple Web Application Across AWS, Azure, and GCP
+Comparison
+
+Using the cost models from Section 2:
+
+    AWS: $27.12/month (EC2, RDS, S3, ALB, data transfer).
+    Azure: $27.30/month (App Service, MySQL, Blob Storage, Load Balancer, data transfer).
+    GCP: $24.63/month (Compute Engine, Cloud SQL, Cloud Storage, Load Balancing, data transfer).
+
+Analysis
+
+    Cost: GCP is the cheapest ($24.63), followed by AWS ($27.12) and Azure ($27.30). The difference is minimal (~$2–3), but GCP’s sustained use discounts and Free Tier compute instance contribute to lower costs.
+    Features:
+        AWS: Offers the most services (e.g., Lambda, AppSync) and scalability options, ideal for complex apps but requires expertise.
+        Azure: Best for Microsoft ecosystem integration (e.g., Visual Studio) and hybrid cloud, with a robust Free Tier.
+        GCP: Simplest for containerized workloads (e.g., Kubernetes, Cloud Run) and AI/ML, with competitive pricing.
+    Ease of Use:
+        AWS: Steep learning curve due to extensive options.
+        Azure: Moderate, with intuitive portal for Microsoft users.
+        GCP: Easiest for small teams due to streamlined services.
+    Free Tier:
+        AWS: 750 hours of EC2/RDS t3.micro, 5 GB S3.
+        Azure: 750 hours of App Service B1, 5 GB MySQL.
+        GCP: 1 e2-micro instance (always free), 5 GB Cloud Storage.
+
+Recommendation
+
+GCP is the best choice for a simple web application due to:
+
+    Lowest cost ($24.63/month).
+    Free Tier compute instance (e2-micro) covers most needs.
+    Sustained use discounts reduce long-term costs.
+    Simplicity for small teams deploying containerized or serverless apps. However, if your organization uses Microsoft tools, Azure is preferable for integration. If you need advanced services or anticipate rapid scaling, AWS is ideal despite higher complexity.
+
+Notes for Your Exam
+
+    IAM User Setup: As discussed in the prior response, use an IAM user with AdministratorAccess and no MFA for exam tasks (Solution 1). Ensure you have credentials written down.
+    Free Tier: Leverage Free Tier services (e.g., AWS EC2 t3.micro, Azure App Service B1, GCP e2-micro) to minimize costs during the exam.
+    Templates: The artifacts provided can be copied into the respective consoles (e.g., IAM policies, pricing calculators) for quick setup.
+    Time Management: Prioritize IAM and budget tasks, as they are faster than web app deployment. Practice navigating consoles to locate services quickly.
+
+If you need further clarification or additional artifacts (e.g., web app code, specific policy JSON), let me know! Good luck on your exam!
